@@ -9,10 +9,13 @@ import java.util.Optional;
 
 @Service
 public class TaskService {
-    private final JsonDatabase jsonDatabase;
 
-    public TaskService(JsonDatabase jsonDatabase) {
+    private final JsonDatabase jsonDatabase;
+    private final UserService userService;
+
+    public TaskService(JsonDatabase jsonDatabase, UserService userService) {
         this.jsonDatabase = jsonDatabase;
+        this.userService = userService;
     }
 
     public List<Task> getTasksForUser(String userId) throws Exception {
@@ -22,9 +25,7 @@ public class TaskService {
     }
 
     public void addTaskToUser(String userId, Task task) throws Exception {
-        List<User> users = jsonDatabase.readUsers();
-        users.stream().filter(u -> u.getId().equals(userId)).findFirst()
-                .ifPresent(user -> user.getTasks().add(task));
-        jsonDatabase.writeUsers(users);
+        User user = userService.getUserById(userId);
+        jsonDatabase.writeUser(user);
     }
 }
