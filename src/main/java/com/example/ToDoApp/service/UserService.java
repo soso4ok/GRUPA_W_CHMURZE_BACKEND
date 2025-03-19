@@ -4,7 +4,6 @@ package com.example.ToDoApp.service;
 import com.example.ToDoApp.model.User;
 import com.example.ToDoApp.repository.JsonDatabase;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class UserService {
@@ -14,11 +13,16 @@ public class UserService {
         this.jsonDatabase = jsonDatabase;
     }
 
-    public List<User> getAllUsers() throws Exception {
-        return jsonDatabase.readUsers();
+    public User getUserById(String userId) throws Exception {
+        return jsonDatabase.readUsers().stream()
+                .filter(u -> u.getId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new Exception("User with ID " + userId + " not found"));
     }
 
-    public void saveUsers(List<User> users) throws Exception {
-        jsonDatabase.writeUsers(users);
+    public void saveUser(User user) throws Exception {
+        jsonDatabase.writeUser(user);
     }
+
+
 }

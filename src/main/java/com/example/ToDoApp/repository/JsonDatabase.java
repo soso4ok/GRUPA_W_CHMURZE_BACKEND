@@ -19,7 +19,7 @@ public class JsonDatabase {
         return objectMapper.readValue(file, new TypeReference<List<User>>() {});
     }
 
-    public void writeUsers(List<User> users) throws Exception {
-        objectMapper.writeValue(new File(FILE_PATH), users);
+    public void writeUser(User user) throws Exception {
+        objectMapper.writeValue(new File(FILE_PATH), user);
     }
 }
