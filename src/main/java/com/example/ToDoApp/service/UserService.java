@@ -13,9 +13,9 @@ public class UserService {
         this.jsonDatabase = jsonDatabase;
     }
 
-    public User getUserById(String userId) throws Exception {
+    public User getUserById(int userId) throws Exception {
         return jsonDatabase.readUsers().stream()
-                .filter(u -> u.getId().equals(userId))
+                .filter(u -> u.getId() == userId)
                 .findFirst()
                 .orElseThrow(() -> new Exception("User with ID " + userId + " not found"));
     }
@@ -23,6 +23,4 @@ public class UserService {
     public void saveUser(User user) throws Exception {
         jsonDatabase.writeUser(user);
     }
-
-
 }

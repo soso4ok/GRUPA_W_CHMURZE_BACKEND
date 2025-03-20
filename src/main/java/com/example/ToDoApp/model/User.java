@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class User {
-    private String id;
+    private int id;
     private String email;
     private String password;
     private List<Task> tasks; // User's tasks
