@@ -18,14 +18,15 @@ public class TaskService {
         this.userService = userService;
     }
 
-    public List<Task> getTasksForUser(String userId) throws Exception {
+    public List<Task> getTasksForUser(int userId) throws Exception {
         List<User> users = jsonDatabase.readUsers();
-        Optional<User> user = users.stream().filter(u -> u.getId().equals(userId)).findFirst();
+        Optional<User> user = users.stream().filter(u -> u.getId() == userId).findFirst();
         return user.map(User::getTasks).orElse(List.of());
     }
 
-    public void addTaskToUser(String userId, Task task) throws Exception {
+    public void addTaskToUser(int userId, Task task) throws Exception {
         User user = userService.getUserById(userId);
+        user.getTasks().add(task);
         jsonDatabase.writeUser(user);
     }
 }

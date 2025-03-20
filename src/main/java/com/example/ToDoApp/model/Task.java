@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Task {
-    private String id;
+    private int id;
     private String title;
     private boolean completed;
 }
