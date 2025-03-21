@@ -5,6 +5,8 @@ import com.example.ToDoApp.model.User;
 import com.example.ToDoApp.repository.JsonDatabase;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     private final JsonDatabase jsonDatabase;
@@ -21,6 +23,15 @@ public class UserService {
     }
 
     public void saveUser(User user) throws Exception {
-        jsonDatabase.writeUser(user);
+        List<User> users = jsonDatabase.readUsers();
+        // Optionally, check if user already exists
+        users.add(user);
+        jsonDatabase.writeUsers(users);
+    }
+
+    public void deleteUser(int userId) throws Exception {
+        List<User> users = jsonDatabase.readUsers();
+        users.removeIf(user -> user.getId() == userId);
+        jsonDatabase.writeUsers(users);
     }
 }
