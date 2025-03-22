@@ -1,13 +1,14 @@
-{
-  "id": 1,
-  "email": "john.doe@example.com",
-  "password": "securepassword123",
-  "tasks": [
-    {
-    "id": 101,
-    "title": "Test Task",
-    "description": "Milk, Bread",
-    "completed": false
-    }
-  ]
-}
+[
+  {
+    "id": 1,
+    "email": "john.doe@example.com",
+    "password": "securepassword123",
+    "tasks": [
+      {
+        "id": 101,
+        "title": "Test Task",
+        "completed": false
+      }
+    ]
+  }
+]
