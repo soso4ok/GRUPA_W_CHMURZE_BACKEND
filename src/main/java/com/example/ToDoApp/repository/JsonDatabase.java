@@ -16,7 +16,12 @@ public class JsonDatabase {
     public List<User> readUsers() throws Exception {
         File file = new File(FILE_PATH);
         if (!file.exists()) return List.of();
-        return objectMapper.readValue(file, new TypeReference<List<User>>() {});
+        try {
+            return objectMapper.readValue(file, new TypeReference<List<User>>() {});
+        } catch (Exception e) {
+            System.err.println("Error reading users: " + e.getMessage());
+            return List.of(); // Return empty list on failure
+        }
     }
 
     public void writeUsers(List<User> users) throws Exception {
