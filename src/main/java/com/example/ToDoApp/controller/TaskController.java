@@ -2,6 +2,8 @@ package com.example.ToDoApp.controller;
 
 import com.example.ToDoApp.model.Task;
 import com.example.ToDoApp.service.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,11 +13,13 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/tasks")
+@Tag(name = "Task management", description = "Endpoints for Tasks for user")
 public class TaskController {
     @Autowired
     private TaskService taskService;
 
     @GetMapping("/user/{userId}")
+    @Operation(summary = "getting task for user by user id", description = "Allows these endpoint to  highlight tasks for user")
     public ResponseEntity<List<Task>> getTasksForUser(@PathVariable int userId){
         try {
             List<Task> tasks = taskService.getTasksForUser(userId);
@@ -29,6 +33,7 @@ public class TaskController {
         }
 
     }
+    @Operation(summary = "Adding task for user", description = "These endpoint allows to add task to user")
     @PostMapping("/user/{userId}")
     public ResponseEntity<List<Task>> addTaskForUser(@PathVariable int userId , @RequestBody Task task){
         try {
