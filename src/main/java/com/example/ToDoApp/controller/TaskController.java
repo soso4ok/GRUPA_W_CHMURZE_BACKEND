@@ -1,6 +1,7 @@
 package com.example.ToDoApp.controller;
 
 import com.example.ToDoApp.model.Task;
+import com.example.ToDoApp.repository.JsonDatabase;
 import com.example.ToDoApp.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +18,8 @@ import java.util.List;
 public class TaskController {
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private JsonDatabase jsonDatabase;
 
     @GetMapping("/user/{userId}")
     @Operation(summary = "getting task for user by user id", description = "Allows these endpoint to  highlight tasks for user")
@@ -43,6 +46,25 @@ public class TaskController {
         catch (Exception e ){
             return ResponseEntity.internalServerError().build();
         }
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> DeleteUserTask(@PathVariable int userId, @PathVariable int taskId){
+        try {
+        taskService.deleteTaskFromUser(taskId , userId);
+        return ResponseEntity.ok("Task deleted sucessfully");
+    }catch (Exception e){
+            return ResponseEntity.internalServerError().body("Error deleting task: " + e.getMessage());
+        }
+    }
+    @PutMapping("/{userid}/tasks")
+    public ResponseEntity<String> updateUserTask(@PathVariable int userId, @RequestBody Task updatedTask){
+        try {
+            taskService.updateTaskForUser(userId , updatedTask);
+            return ResponseEntity.ok("Task updated Ok");
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("Error updating task");
+        }
+
     }
 
 }
