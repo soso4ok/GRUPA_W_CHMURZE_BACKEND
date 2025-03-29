@@ -1,7 +1,7 @@
 package com.example.ToDoApp.controller;
 
 import com.example.ToDoApp.model.Task;
-import com.example.ToDoApp.repository.JsonDatabase;
+import com.example.ToDoApp.repository.UserRepository;
 import com.example.ToDoApp.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,11 +19,11 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
     @Autowired
-    private JsonDatabase jsonDatabase;
+    private UserRepository userRepository;
 
     @GetMapping("/user/{userId}")
     @Operation(summary = "getting task for user by user id", description = "Allows these endpoint to  highlight tasks for user")
-    public ResponseEntity<List<Task>> getTasksForUser(@PathVariable int userId){
+    public ResponseEntity<List<Task>> getTasksForUser(@PathVariable String userId){
         try {
             List<Task> tasks = taskService.getTasksForUser(userId);
             if (tasks.isEmpty()) {
@@ -38,7 +38,7 @@ public class TaskController {
     }
     @Operation(summary = "Adding task for user", description = "These endpoint allows to add task to user")
     @PostMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> addTaskForUser(@PathVariable int userId , @RequestBody Task task){
+    public ResponseEntity<List<Task>> addTaskForUser(@PathVariable String userId , @RequestBody Task task){
         try {
             taskService.addTaskToUser(userId , task);
             return ResponseEntity.ok().build();
@@ -48,7 +48,7 @@ public class TaskController {
         }
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> DeleteUserTask(@PathVariable int userId, @PathVariable int taskId){
+    public ResponseEntity<String> DeleteUserTask(@PathVariable String userId, @PathVariable String taskId){
         try {
         taskService.deleteTaskFromUser(taskId , userId);
         return ResponseEntity.ok("Task deleted sucessfully");
@@ -57,7 +57,7 @@ public class TaskController {
         }
     }
     @PutMapping("/{userid}/tasks")
-    public ResponseEntity<String> updateUserTask(@PathVariable int userId, @RequestBody Task updatedTask){
+    public ResponseEntity<String> updateUserTask(@PathVariable String userId, @RequestBody Task updatedTask){
         try {
             taskService.updateTaskForUser(userId , updatedTask);
             return ResponseEntity.ok("Task updated Ok");

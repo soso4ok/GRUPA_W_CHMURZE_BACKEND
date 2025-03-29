@@ -2,36 +2,38 @@
 package com.example.ToDoApp.service;
 
 import com.example.ToDoApp.model.User;
-import com.example.ToDoApp.repository.JsonDatabase;
+import com.example.ToDoApp.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
-    private final JsonDatabase jsonDatabase;
+    private final UserRepository userRepository;
 
-    public UserService(JsonDatabase jsonDatabase) {
-        this.jsonDatabase = jsonDatabase;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public User getUserById(int userId) throws Exception {
-        return jsonDatabase.readUsers().stream()
+
+    public User getUserById(String userId) throws Exception {
+        return userRepository.findById(userId).stream()
                 .filter(u -> u.getId() == userId)
                 .findFirst()
                 .orElseThrow(() -> new Exception("User with ID " + userId + " not found"));
     }
 
     public void saveUser(User user) throws Exception {
-        List<User> users = jsonDatabase.readUsers();
-        // Optionally, check if user already exists
-        users.add(user);
-        jsonDatabase.writeUsers(users);
+        if(userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new Exception("User with email " + user.getEmail() + " already exists");
+        }
+        userRepository.save(user);
     }
 
-    public void deleteUser(int userId) throws Exception {
-        List<User> users = jsonDatabase.readUsers();
-        users.removeIf(user -> user.getId() == userId);
-        jsonDatabase.writeUsers(users);
+    public void deleteUser(String userId) throws Exception {
+        Optional<User> users = userRepository.findById(userId);
+        users.orElseThrow(() -> new Exception("User with ID " + userId + " not found"));
+        userRepository.deleteById(userId);
     }
 }

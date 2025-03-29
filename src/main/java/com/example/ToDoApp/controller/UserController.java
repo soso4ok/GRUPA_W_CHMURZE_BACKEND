@@ -17,13 +17,13 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private  UserService userService;
 
 
 
     @GetMapping("{id}")
     @Operation(summary = "getting user by id", description = "Getting user by id")
-    public ResponseEntity<User> getUserById(@PathVariable("id") int id) {
+    public ResponseEntity<User> getUserById(@PathVariable("id") String id) {
         try {
             User user = userService.getUserById(id);
             return ResponseEntity.ok(user);
@@ -45,7 +45,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a user", description = "Removes a user by ID")
-    public ResponseEntity<String> deleteUser(@PathVariable int id) {
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
         try {
             userService.deleteUser(id);
             return ResponseEntity.ok("User deleted successfully!");
