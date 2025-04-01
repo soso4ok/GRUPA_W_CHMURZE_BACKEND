@@ -3,25 +3,21 @@ package com.example.ToDoApp.service;
 
 import com.example.ToDoApp.model.User;
 import com.example.ToDoApp.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
 
     public User getUserById(String userId) throws Exception {
-        return userRepository.findById(userId).stream()
-                .filter(u -> u.getId() == userId)
-                .findFirst()
-                .orElseThrow(() -> new Exception("User with ID " + userId + " not found"));
+        Optional<User> users = userRepository.findById(userId);
+        return users.orElseThrow(() -> new Exception("User with ID " + userId + " not found"));
     }
 
     public void saveUser(User user) throws Exception {
