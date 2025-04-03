@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -20,5 +21,9 @@ public class User {
     private String email;
     private String password;
     @DBRef
-    private List<Task> tasks; // User's tasks
+    private List<Task> tasks;
+
+    public User() {
+        this.tasks = new ArrayList<>();
+    }// User's tasks
 }
