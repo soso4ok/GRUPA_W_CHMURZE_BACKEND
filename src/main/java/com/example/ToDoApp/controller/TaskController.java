@@ -58,8 +58,8 @@ public class TaskController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    @DeleteMapping("/{id}")
-    @Operation(summary = "deleting user" , description = "Deleting user from database")
+    @DeleteMapping("/user/{userId}/task/{taskId}")
+    @Operation(summary = "deleting Task" , description = "Deleting user from database")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200" , description = "User deleted successfully"),
             @ApiResponse(responseCode = "500" , description = "Failed to delete task")
@@ -72,7 +72,7 @@ public class TaskController {
             return ResponseEntity.internalServerError().body("Error deleting task: " + e.getMessage());
         }
     }
-    @PutMapping("/{userid}/tasks")
+    @PutMapping("/{userId}/tasks")
     @Operation(summary = "Updating task for user" , description = "Updating task for particular user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200" , description = "user task updated"),
