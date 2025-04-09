@@ -41,9 +41,4 @@ jobs:
     - name: Deploy to Cloud Run
       run: |
         IMAGE_URI=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest
-        gcloud run deploy "${{ env.SERVICE }}" \
-          --image "$IMAGE_URI" \
-          --region "${{ env.REGION }}" \
-          --platform managed \
-          --set-env-vars "MONGO_URI=${{ secrets.MONGO_URI }},DB_NAME=${{ secrets.DB_NAME }}" \
-          --allow-unauthenticated
+        gcloud run deploy "${{ env.SERVICE }}" --image "${IMAGE_URI}" --region "${{ env.REGION }}" --platform managed --set-env-vars MONGO_URI=${{ secrets.MONGO_URI }},DB_NAME=${{ secrets.DB_NAME }} --allow-unauthenticated
