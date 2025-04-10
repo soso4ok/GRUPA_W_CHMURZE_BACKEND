@@ -5,12 +5,9 @@ on:
     branches:
       - main
 
+# Global environment variables (optional overrides or defaults)
 env:
-  CLOUDSDK_CORE_DISABLE_PROMPTS: 1
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  REGION: ${{ secrets.GCP_REGION }}
-  REPOSITORY: ${{ secrets.GCP_REPOSITORY }}
-  SERVICE: ${{ secrets.SERVICE_NAME }}
+  CLOUDSDK_CORE_DISABLE_PROMPTS: 1  # Disables interactive prompts
 
 jobs:
   deploy:
@@ -19,6 +16,24 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+
+    - name: Load Environment Variables from Repository
+      run: |
+        # Load .env file into the environment
+        if [ -f .env ]; then
+          echo "Loading environment variables from .env"
+          set -a  # Automatically export all variables
+          . ./.env  # Source the .env file
+          set +a
+        else
+          echo "No .env file found in repository"
+          exit 1  # Fail if .env is missing (optional)
+        fi
+        # Export variables to GITHUB_ENV for later steps
+        echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
+        echo "REGION=$REGION" >> $GITHUB_ENV
+        echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
+        echo "SERVICE=$SERVICE" >> $GITHUB_ENV
 
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
@@ -36,7 +51,7 @@ jobs:
     - name: Set IMAGE_URI
       run: echo "IMAGE_URI=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest" >> $GITHUB_ENV
 
-    - name: Build and push Docker image
+    - name: Build and Push Docker Image
       run: |
         docker build -t ${{ env.IMAGE_URI }} .
         docker push ${{ env.IMAGE_URI }}
@@ -47,5 +62,5 @@ jobs:
           --image ${{ env.IMAGE_URI }} \
           --region ${{ env.REGION }} \
           --platform managed \
-          --set-env-vars MONGO_URI=${{ secrets.MONGO_URI }},DB_NAME=${{ secrets.DB_NAME }} \
+          --set-env-vars MONGO_URI=${{ env.MONGO_URI }},DB_NAME=${{ env.DB_NAME }} \
           --allow-unauthenticated
