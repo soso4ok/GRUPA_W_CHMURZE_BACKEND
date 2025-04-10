@@ -32,11 +32,13 @@ jobs:
     - name: Configure Docker for Artifact Registry
       run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
+    - name: Set IMAGE_URI
+      run: echo "IMAGE_URI=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest" >> $GITHUB_ENV
+
     - name: Build and push Docker image
       run: |
-        IMAGE_URI=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest
-        docker build -t $IMAGE_URI .
-        docker push $IMAGE_URI
+        docker build -t ${{ env.IMAGE_URI }} .
+        docker push ${{ env.IMAGE_URI }}
 
     - name: Deploy to Cloud Run
-      run: gcloud run deploy $SERVICE --image $IMAGE_URI --region $REGION --platform managed --allow-unauthenticated
+      run: gcloud run deploy ${{ env.SERVICE }} --image ${{ env.IMAGE_URI }} --region ${{ env.REGION }} --platform managed --set-env-vars MONGO_URI=${{ secrets.MONGO_URI }},DB_NAME=${{ secrets.DB_NAME }} --allow-unauthenticated
