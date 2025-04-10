@@ -6,6 +6,7 @@ on:
       - main
 
 env:
+  CLOUDSDK_CORE_DISABLE_PROMPTS: 1
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: ${{ secrets.GCP_REGION }}
   REPOSITORY: ${{ secrets.GCP_REPOSITORY }}
@@ -41,4 +42,10 @@ jobs:
         docker push ${{ env.IMAGE_URI }}
 
     - name: Deploy to Cloud Run
-      run: gcloud run deploy ${{ env.SERVICE }} --image ${{ env.IMAGE_URI }} --region ${{ env.REGION }} --platform managed --set-env-vars MONGO_URI=${{ secrets.MONGO_URI }},DB_NAME=${{ secrets.DB_NAME }} --allow-unauthenticated
+      run: |
+        gcloud run deploy ${{ env.SERVICE }} \
+          --image ${{ env.IMAGE_URI }} \
+          --region ${{ env.REGION }} \
+          --platform managed \
+          --set-env-vars MONGO_URI=${{ secrets.MONGO_URI }},DB_NAME=${{ secrets.DB_NAME }} \
+          --allow-unauthenticated
