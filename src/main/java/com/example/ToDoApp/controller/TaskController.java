@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -49,14 +50,16 @@ public class TaskController {
             @ApiResponse(responseCode = "500" , description = "failed to add task")
     })
     @PostMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> addTaskForUser(@PathVariable String userId , @RequestBody Task task){
+    public ResponseEntity<String> addTaskForUser(@PathVariable String userId, @RequestBody Task task) {
         try {
-            taskService.addTaskToUser(userId , task);
-            return ResponseEntity.ok().build();
+            taskService.addTaskToUser(userId, task);
+            return ResponseEntity.ok("Task added successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
-        catch (Exception e ){
-            return ResponseEntity.internalServerError().build();
-        }
+
     }
     @DeleteMapping("/user/{userId}/task/{taskId}")
     @Operation(summary = "deleting Task" , description = "Deleting user from database")

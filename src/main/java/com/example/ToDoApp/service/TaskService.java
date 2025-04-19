@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,21 +28,31 @@ public class TaskService {
     }
 
     public void addTaskToUser(String userId, Task task) throws Exception {
-        // Save the task first to generate an ID and store it in the Tasks collection
-        Task savedTask = taskRepository.save(task);
-
-        Optional<User> users = userRepository.findById(userId);
-        if (users.isPresent()) {
-            User user = users.get();
-            // The constructor ensures tasks is initialized, but this check adds robustness
-            if (user.getTasks() == null) {
-                user.setTasks(new ArrayList<>());
-            }
-            user.getTasks().add(savedTask);
-            userRepository.save(user);
-        } else {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
             throw new Exception("User not found");
         }
+
+        User user = userOpt.get();
+
+        if (user.getTasks() == null) {
+            user.setTasks(new ArrayList<>());
+        }
+
+        boolean existsInUser = user.getTasks()
+                .stream()
+                .filter(Objects::nonNull)
+                .anyMatch(t -> t.getId().equals(task.getId()));
+
+        if (existsInUser) {
+            throw new IllegalArgumentException(
+                    "Task with ID " + task.getId() + " already exists for this user!"
+            );
+        }
+
+        Task savedTask = taskRepository.save(task);
+        user.getTasks().add(savedTask);
+        userRepository.save(user);
     }
 
 
