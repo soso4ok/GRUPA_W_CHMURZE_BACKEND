@@ -32,7 +32,6 @@ public class TaskService {
         if (userOpt.isEmpty()) {
             throw new Exception("User not found");
         }
-
         User user = userOpt.get();
 
         if (user.getTasks() == null) {
@@ -57,21 +56,21 @@ public class TaskService {
 
 
     public void deleteTaskFromUser(String userId, String taskId) throws Exception {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (user.getTasks() != null && !user.getTasks().isEmpty()) {
-                user.setTasks(
-                        user.getTasks().stream()
-                                .filter(task -> !task.getId().equals(taskId))
-                                .toList()
-                );
-                userRepository.save(user);
-            }
-        } else {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
             throw new Exception("User not found");
         }
+
+        User user = userOpt.get();
+        boolean removed = user.getTasks().removeIf(task -> task != null && task.getId().equals(taskId));
+
+        if (!removed) {
+            throw new Exception("Task not found for user");
+        }
+
+        userRepository.save(user);
     }
+
 
     public void updateTaskForUser(String userId, Task updatedTask) throws Exception {
         Optional<User> users = userRepository.findById(userId);
