@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,19 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+
+
+    @GetMapping("/")
+    public ResponseEntity<List<User>> getAllUsers() throws Exception {
+        try {
+            List<User> users = userService.getAllUsers();
+            return ResponseEntity.ok(users);
+        }
+        catch (Exception e) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+    }
+
 
     @SneakyThrows
     @GetMapping("/{id}")

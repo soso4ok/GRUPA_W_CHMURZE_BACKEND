@@ -15,6 +15,12 @@ public class UserService {
     private final UserRepository userRepository;
 
 
+    public List<User> getAllUsers() throws Exception{
+        return userRepository.findAll();
+
+
+    }
+
     public User getUserById(String userId) throws Exception {
         Optional<User> users = userRepository.findById(userId);
         return users.orElseThrow(() -> new Exception("User with ID " + userId + " not found"));
