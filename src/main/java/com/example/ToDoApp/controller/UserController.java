@@ -27,6 +27,7 @@ public class UserController {
     private final UserService userService;
 
 
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers() throws Exception {
         try {
@@ -40,6 +41,7 @@ public class UserController {
 
 
     @SneakyThrows
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @GetMapping("/{id}")
     @Operation(summary = "getting user by its id")
     @ApiResponses(value = {
@@ -49,7 +51,7 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable("id") String id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
-
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PostMapping
     @Operation(summary = "Create a new user", description = "Adds a new user to the system")
     @ApiResponses(value = {
@@ -65,7 +67,7 @@ public class UserController {
             return ResponseEntity.internalServerError().body("Error creating user: " + e.getMessage());
         }
     }
-
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a user", description = "Removes a user by ID")
     @ApiResponses(value = {
