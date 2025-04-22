@@ -74,22 +74,30 @@ public class TaskService {
 
     public void updateTaskForUser(String userId, Task updatedTask) throws Exception {
         Optional<User> users = userRepository.findById(userId);
-        if (users.isPresent()) {
-            User user = users.get();
-            if (user.getTasks() != null && !user.getTasks().isEmpty()) {
-                for (int i = 0; i < user.getTasks().size(); i++) {
-                    if (user.getTasks().get(i).getId().equals(updatedTask.getId())) {
-                        user.getTasks().set(i, updatedTask);
-                    }
-                }
-                userRepository.save(user);
-            } else {
-                throw new Exception("User has no tasks to update");
-            }
-        } else {
+        if (users.isEmpty()) {
             throw new Exception("User not found");
         }
+
+        User user = users.get();
+        if (user.getTasks() == null || user.getTasks().isEmpty()) {
+            throw new Exception("User has no tasks to update");
+        }
+
+        boolean found = false;
+        for (Task task : user.getTasks()) {
+            if (task.getId().equals(updatedTask.getId())) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            throw new Exception("Task not found for this user");
+        }
+
+        taskRepository.save(updatedTask);
+
+        userRepository.save(user);
+
     }
-
-
 }
