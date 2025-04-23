@@ -24,7 +24,7 @@ public class TaskController {
     @Autowired
     private UserRepository userRepository;
 
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @CrossOrigin(origins = "http://127.0.0.1:5001")
     @GetMapping("/user/{userId}")
     @Operation(summary = "getting task for user by user id", description = "These endpoint allows to  highlight tasks for user")
     @ApiResponses(value = {
@@ -45,7 +45,7 @@ public class TaskController {
         }
 
     }
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @CrossOrigin(origins = "http://127.0.0.1:5001")
     @Operation(summary = "Adding task for user", description = "These endpoint allows to add task to user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200" , description = "Tasks added successfully"),
@@ -63,7 +63,7 @@ public class TaskController {
         }
 
     }
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @CrossOrigin(origins = "http://127.0.0.1:5001")
     @DeleteMapping("/user/{userId}/task/{taskId}")
     @Operation(summary = "deleting Task" , description = "Deleting user from database")
     @ApiResponses(value = {
@@ -78,7 +78,7 @@ public class TaskController {
             return ResponseEntity.internalServerError().body("Error deleting task: " + e.getMessage());
         }
     }
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @CrossOrigin(origins = "http://127.0.0.1:5001")
     @PutMapping("/{userId}/tasks")
     @Operation(summary = "Updating task for user" , description = "Updating task for particular user")
     @ApiResponses(value = {
