@@ -1,0 +1,9 @@
+services:
+  backend:
+    build: .
+    container_name: todo-backend
+    image: grupawchmurzebackendacrregestry.azurecr.io/grupa-w-chmurze-back-end:v3
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
