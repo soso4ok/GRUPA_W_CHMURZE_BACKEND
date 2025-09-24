@@ -3,9 +3,6 @@ targetScope = 'subscription'
 param projectName string = 'grupawchmurzebackend'
 param location string = 'centralus'
 
-param adminUsername string = 'azureuser'
-@secure()
-param sshPublicKey string
 param vmSize string = 'Standard_D2s_v3'
 param kubernetesVersion string = '1.32.5'
 
@@ -25,8 +22,6 @@ module mainModule 'main.resources.bicep' = {
     location: location
     acrName: acrName
     aksName: aksName
-    adminUsername: adminUsername
-    sshPublicKey: sshPublicKey
     vmSize: vmSize
     kubernetesVersion: kubernetesVersion
   }
