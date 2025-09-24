@@ -1,0 +1,7 @@
+
+spring:
+  application:
+    name: ToDoApp
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
