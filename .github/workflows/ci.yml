@@ -1,0 +1,52 @@
+name: ci.yml
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    name: Build and Test Java Application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Cache Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install Maven
+        run: sudo apt-get update && sudo apt-get install -y maven
+
+      - name: Set executable permissions for Maven wrapper
+        run: chmod +x ./mvnw
+
+      - name: Build, test, and package with Maven
+        run: ./mvnw -B verify
+
+  lint-infrastructure:
+    name: Lint Bicep Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure (needed for Bicep CLI)
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Lint Bicep code
+        run: az bicep build --file ./infra/main.bicep
