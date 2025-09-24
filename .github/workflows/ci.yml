@@ -48,7 +48,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Log in to Azure (needed for Bicep CLI)
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
