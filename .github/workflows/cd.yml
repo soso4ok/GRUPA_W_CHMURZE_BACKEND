@@ -42,7 +42,7 @@ jobs:
         run: chmod +x ./mvnw
 
       - name: Build with Maven (skip tests)
-        run: ./mvnw -B verify -DskipTests
+        run: ./mvnw -B package -DskipTests
 
       - name: Log in to ACR
         uses: azure/docker-login@v1

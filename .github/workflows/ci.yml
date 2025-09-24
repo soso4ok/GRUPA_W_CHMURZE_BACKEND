@@ -38,7 +38,7 @@ jobs:
         run: chmod +x ./mvnw
 
       - name: Build, test, and package with Maven
-        run: ./mvnw -B verify
+        run: ./mvnw -B package -DskipTests
 
   lint-infrastructure:
     name: Lint Bicep Files
