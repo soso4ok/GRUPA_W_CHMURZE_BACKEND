@@ -48,7 +48,7 @@ jobs:
           az acr login --name ${{ env.ACR_NAME }}
 
       - name: Set image name variable
-        run: echo "IMAGE_NAME=${{ env.ACR_NAME }}.azurecr.io/my-backend-app" >> $GITHUB_ENV
+        run: echo "IMAGE_NAME=${{ env.ACR_NAME }}.azurecr.io/grupa-w-chmurze-back-end" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         run: |
