@@ -13,7 +13,7 @@ env:
   ACR_NAME: 'grupawchmurzebackendacrregestry'
   AKS_NAME: 'grupawchmurzebackend-aks'
   IMAGE_NAME: ${{ env.ACR_NAME }}.azurecr.io/my-backend-app
-  K8S_DEPLOYMENT_NAME: 'grupa-w-kubie.yaml'
+  K8S_DEPLOYMENT_NAME: 'grupa-w-chmurze-back-end-deployment'
   K8S_CONTAINER_NAME: 'grupa-w-chmurze-back-end-container'
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
         run: chmod +x ./mvnw
 
       - name: Build with Maven (skip tests)
-        run: ./mvnw -B package -DskipTests
+        run: ./mvnw -B verify -DskipTests
 
       - name: Log in to ACR
         uses: azure/docker-login@v1
