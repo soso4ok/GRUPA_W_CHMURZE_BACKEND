@@ -63,7 +63,7 @@ jobs:
             --from-literal=mongo-uri='${{ secrets.MONGO_URI }}' \
             --dry-run=client -o yaml | kubectl apply -f -
 
-          kubectl apply -f grupa-w-kubie.yaml
+          kubectl apply -f kube/grupa-w-kubie.yaml
 
           kubectl set image deployment/${{ env.K8S_DEPLOYMENT_NAME }} ${{ env.K8S_CONTAINER_NAME }}=${{ env.IMAGE_NAME }}:${{ github.sha }}
           
